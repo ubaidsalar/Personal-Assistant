@@ -155,23 +155,10 @@
     background-color: #f8e8e8;
 }
 
-.entry {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #bdc3c7;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column; /* Stack content and buttons vertically */
-    background-color: #f8f8e8; /* Adjust color if needed */
-}
-
-.entry .content-buttons {
-    display: flex;
-    justify-content: space-between; /* Space out the buttons */
-    margin-top: 10px;
-}
-
-.entry .content-buttons button {
+.entry button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
     background-color: #e74c3c;
     color: #ecf0f1;
     border: none;
@@ -181,22 +168,24 @@
     transition: background-color 0.3s ease;
 }
 
-.entry .content-buttons button.complete {
+.entry button.complete {
     background-color: #27ae60;
+    top: 35px;
 }
 
-.entry .content-buttons button:hover {
+.entry button:hover {
     background-color: #c0392b;
 }
 
-.entry .content-buttons button.complete:hover {
+.entry button.complete:hover {
     background-color: #1e8449;
 }
 
-.entry.completed p {
+.entry.completed {
     text-decoration: line-through;
     background-color: #d4efdf;
 }
+
 /* Auto-suggestion dropdown */
 .suggestions {
     position: absolute;
@@ -305,10 +294,8 @@ function saveContent(content, className, sectionId, timestamp) {
     entryDiv.innerHTML = `
         <div class="timestamp">${timestamp}</div>
         <p>${content}</p>
-        <div class="content-buttons">
-            ${className === 'task' ? '<button class="complete" onclick="toggleComplete(this)">Complete</button>' : ''}
-            <button onclick="deleteEntry(this)">Delete</button>
-        </div>
+        ${className === 'task' ? '<button class="complete" onclick="toggleComplete(this)">Complete</button>' : ''}
+        <button onclick="deleteEntry(this)">Delete</button>
     `;
     section.appendChild(entryDiv);
     saveData();
@@ -387,4 +374,4 @@ function hideSuggestions() {
 }    </script>
 
 </body>
-</html> 
+</html>
