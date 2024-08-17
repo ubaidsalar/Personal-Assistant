@@ -247,138 +247,41 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', loadAllData);
+# Initialize list of commands
+commands = ["Log:", "Task:", "Plans:", "Check:"]
 
-function showSection(sectionId) {
-    document.querySelectorAll('.main').forEach(section => section.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-}
+# Function to display suggestions while typing
+def suggest_commands(input_text):
+    suggestions = []
+    
+    # Display suggestions if input is not yet recognized as a full command
+    if not input_text.strip().endswith(":"):
+        for command in commands:
+            if command.lower().startswith(input_text.lower()):
+                suggestions.append(command)
+    
+    return suggestions
 
-function processInput() {
-    const input = document.getElementById('userInput').value.trim();
-    const chatWindow = document.getElementById('chat-window');
-    if (!input) return;
+# Function to handle selection or completion of command
+def handle_command_selection(input_text):
+    # Check if the input is a full command
+    for command in commands:
+        if input_text.strip().lower() == command.lower():
+            return f"Command '{command}' recognized."
+    
+    # Continue suggesting until command is fully typed
+    return suggest_commands(input_text)
 
-    addChatMessage(input, 'user');
-    document.getElementById('userInput').value = '';
-    hideSuggestions();
+# Example usage
+input_text = "Ta"  # As the user types
 
-    const [command, ...contentArray] = input.split(':');
-    const content = contentArray.join(':').trim();
-    const timestamp = new Date().toLocaleString();
+suggestions = suggest_commands(input_text)  # Suggest "Task:" and other matching commands
+print(suggestions)  # Outputs: ["Task:"]
 
-    switch (command.trim().toLowerCase()) {
-        case 'log':
-            saveContent(content, 'memory', 'memories-section', timestamp);
-            break;
-        case 'task':
-            saveContent(content, 'task', 'tasks-section', timestamp);
-            break;
-        default:
-            addChatMessage("Unknown command. Please use 'Log:' or 'Task:'.", 'bot');
-    }
-}
-
-function addChatMessage(message, type) {
-    const chatWindow = document.getElementById('chat-window');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${type}`;
-    messageDiv.innerText = message;
-    chatWindow.appendChild(messageDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
-
-function saveContent(content, className, sectionId, timestamp) {
-    const section = document.getElementById(sectionId);
-    const entryDiv = document.createElement('div');
-    entryDiv.className = `entry ${className} scrollbar`;
-    entryDiv.innerHTML = `
-        <div class="timestamp">${timestamp}</div>
-        <p>${content}</p>
-        ${className === 'task' ? '<button class="complete" onclick="toggleComplete(this)">Complete</button>' : ''}
-        <button onclick="deleteEntry(this)">Delete</button>
-    `;
-    section.appendChild(entryDiv);
-    saveData();
-}
-
-function toggleComplete(button) {
-    const entry = button.parentElement;
-    entry.classList.toggle('completed');
-    button.innerText = entry.classList.contains('completed') ? 'Undo' : 'Complete';
-    saveData();
-}
-
-function deleteEntry(button) {
-    const entry = button.parentElement;
-    entry.remove();
-    saveData();
-}
-
-function saveData() {
-    const sections = ['memories', 'tasks', 'diary'];
-    sections.forEach(section => {
-        const sectionData = Array.from(document.getElementById(`${section}-section`).children)
-            .map(entry => ({
-                content: entry.querySelector('p').innerText,
-                className: entry.className.split(' ')[1],
-                timestamp: entry.querySelector('.timestamp').innerText,
-                completed: entry.classList.contains('completed')
-            }));
-        localStorage.setItem(section, JSON.stringify(sectionData));
-    });
-}
-
-function loadAllData() {
-    const sections = ['memories', 'tasks', 'diary'];
-    sections.forEach(section => {
-        const sectionData = JSON.parse(localStorage.getItem(section)) || [];
-        sectionData.forEach(data => {
-            const sectionId = `${section}-section`;
-            const entryDiv = document.createElement('div');
-            entryDiv.className = `entry ${data.className} scrollbar ${data.completed ? 'completed' : ''}`;
-            entryDiv.innerHTML = `
-                <div class="timestamp">${data.timestamp}</div>
-                <p>${data.content}</p>
-                ${data.className === 'task' ? '<button class="complete" onclick="toggleComplete(this)">Complete</button>' : ''}
-                <button onclick="deleteEntry(this)">Delete</button>
-            `;
-            document.getElementById(sectionId).appendChild(entryDiv);
-        });
-    });
-}
-
-function showSuggestions() {
-    const input = document.getElementById('userInput').value.toLowerCase();
-    const suggestions = document.getElementById('suggestions');
-    const suggestionItems = suggestions.querySelectorAll('div');
-
-    if (input) {
-        suggestions.style.display = 'block';
-        suggestionItems.forEach(suggestion => {
-            if (suggestion.innerText.toLowerCase().startsWith(input)) {
-                suggestion.style.display = 'block';
-            } else {
-                suggestion.style.display = 'none';
-            }
-        });
-    } else {
-        suggestions.style.display = 'none';
-    }
-}
-
-function hideSuggestions() {
-    document.getElementById('suggestions').style.display = 'none';
-}
-
-// Add click event listeners to suggestion items
-document.querySelectorAll('.suggestions div').forEach(suggestion => {
-    suggestion.addEventListener('click', function () {
-        document.getElementById('userInput').value = this.innerText + ' ';
-        hideSuggestions();
-        document.getElementById('userInput').focus();
-    });
-});    </script>
+input_text = "Task:"  # User completes the command
+result = handle_command_selection(input_text)  # Command recognized, stop suggesting
+print(result)  # Outputs: "Command 'Task:' recognized."
+    </script>
 
 </body>
 </html>
