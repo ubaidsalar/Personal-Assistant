@@ -342,7 +342,7 @@ function loadAllData() {
             entryDiv.innerHTML = `
                 <div class="timestamp">${data.timestamp}</div>
                 <p>${data.content}</p>
-                ${data.className === 'task' ? '<button class="complete" onclick="toggleComplete(this)">Complete</button>' : ''}
+                ${data.className === 'task' ? `<button class="complete" onclick="toggleComplete(this)">${data.completed ? 'Undo' : 'Complete'}</button>` : ''}
                 <button onclick="deleteEntry(this)">Delete</button>
             `;
             document.getElementById(sectionId).appendChild(entryDiv);
