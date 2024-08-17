@@ -348,24 +348,37 @@ function loadAllData() {
     });
 }
 
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 function showSuggestions() {
-    const input = document.getElementById('userInput').value;
+    const input = document.getElementById('userInput').value.toLowerCase();
     const suggestions = document.getElementById('suggestions');
-    if (input.startsWith('Log:') || input.startsWith('Task:') || input.startsWith('Diary:')) {
-        suggestions.style.display = 'none';
-    } else {
+    const suggestionItems = suggestions.querySelectorAll('div');
+
+    if (input) {
         suggestions.style.display = 'block';
+        suggestionItems.forEach(suggestion => {
+            if (suggestion.innerText.toLowerCase().startsWith(input)) {
+                suggestion.style.display = 'block';
+            } else {
+                suggestion.style.display = 'none';
+            }
+        });
+    } else {
+        suggestions.style.display = 'none';
     }
 }
 
 function hideSuggestions() {
     document.getElementById('suggestions').style.display = 'none';
 }
-    </script>
+
+// Add click event listeners to suggestion items
+document.querySelectorAll('.suggestions div').forEach(suggestion => {
+    suggestion.addEventListener('click', function () {
+        document.getElementById('userInput').value = this.innerText + ' ';
+        hideSuggestions();
+        document.getElementById('userInput').focus();
+    });
+});    </script>
 
 </body>
 </html>
