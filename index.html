@@ -143,24 +143,22 @@
     color: #7f8c8d;
 }
 
-.entry-content .entry.memory {
+.entry.memory {
     background-color: #e8f4f8;
 }
 
-.entry-content .entry.task {
+.entry.task {
     background-color: #f8f8e8;
 }
 
-.entry-content .entry.diary-entry {
+.entry.diary-entry {
     background-color: #f8e8e8;
 }
 
-.entry-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-.entry-content .entry button {
+.entry button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
     background-color: #e74c3c;
     color: #ecf0f1;
     border: none;
@@ -170,20 +168,20 @@
     transition: background-color 0.3s ease;
 }
 
-.entry-content .entry button.complete {
+.entry button.complete {
     background-color: #27ae60;
     top: 35px;
 }
 
-.entry-content .entry button:hover {
+.entry button:hover {
     background-color: #c0392b;
 }
 
-.entry-content .entry button.complete:hover {
+.entry button.complete:hover {
     background-color: #1e8449;
 }
 
-.entry-content .entry.completed {
+.entry.completed {
     text-decoration: line-through;
     background-color: #d4efdf;
 }
@@ -295,11 +293,9 @@ function saveContent(content, className, sectionId, timestamp) {
     entryDiv.className = `entry ${className} scrollbar`;
     entryDiv.innerHTML = `
         <div class="timestamp">${timestamp}</div>
-        <div class="entry-content>
         <p>${content}</p>
         ${className === 'task' ? '<button class="complete" onclick="toggleComplete(this)">Complete</button>' : ''}
         <button onclick="deleteEntry(this)">Delete</button>
-        </div>
     `;
     section.appendChild(entryDiv);
     saveData();
