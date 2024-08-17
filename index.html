@@ -155,10 +155,12 @@
     background-color: #f8e8e8;
 }
 
+.entry-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
 .entry button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
     background-color: #e74c3c;
     color: #ecf0f1;
     border: none;
@@ -293,9 +295,11 @@ function saveContent(content, className, sectionId, timestamp) {
     entryDiv.className = `entry ${className} scrollbar`;
     entryDiv.innerHTML = `
         <div class="timestamp">${timestamp}</div>
+        <div class="entry-content>
         <p>${content}</p>
         ${className === 'task' ? '<button class="complete" onclick="toggleComplete(this)">Complete</button>' : ''}
         <button onclick="deleteEntry(this)">Delete</button>
+        </div>
     `;
     section.appendChild(entryDiv);
     saveData();
