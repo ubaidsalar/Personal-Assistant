@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>My Diary</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="tasks.html">Tasks</a>
+            <a href="memories.html">Memories</a>
+            <a href="diary.html">Diary</a>
+        </nav>
+    </header>
+    <main>
+        <section id="diary-form">
+            <h2>Add New Page</h2>
+            <form id="add-diary-form">
+                <select id="diary-category" required>
+                    <option value="" disabled selected>Your Mood Right Now</option>
+                    <option value="😊 Happy">😊 Happy</option>
+                    <option value="😢 Sad">😢 Sad</option>
+                    <option value="😠 Angry">😠 Angry</option>
+                    <option value="😲 Surprised">😲 Surprised</option>
+                    <option value="😟 Anxious">😟 Anxious</option>
+                    <option value="😃 Excited">😃 Excited</option>
+                    <option value="😐 Bored">😐 Bored</option>
+                    <option value="😨 Fearful">😨 Fearful</option>
+                    <option value="😌 Calm">😌 Calm</option>
+                    <option value="😕 Confused">😕 Confused</option>
+                    <option value="Others">Others</option>
+                </select>                
+                <textarea id="diary-description" placeholder="Diary Description"></textarea>
+                <button type="submit">Add diary</button>
+            </form>
+        </section>
+
+        <section id="diary-list">
+            <h2>Pages Of My Diary</h2>
+            <div class="filterContainer">
+                <select id="filter-category">
+                    <option value="">All Categories</option>
+                    <option value="😊 Happy">😊 Happy</option>
+                    <option value="😢 Sad">😢 Sad</option>
+                    <option value="😠 Angry">😠 Angry</option>
+                    <option value="😲 Surprised">😲 Surprised</option>
+                    <option value="😟 Anxious">😟 Anxious</option>
+                    <option value="😃 Excited">😃 Excited</option>
+                    <option value="😐 Bored">😐 Bored</option>
+                    <option value="😨 Fearful">😨 Fearful</option>
+                    <option value="😌 Calm">😌 Calm</option>
+                    <option value="😕 Confused">😕 Confused</option>
+                    <option value="Others">Others</option>
+                </select>                
+                <button id="apply-filters">Apply Filters</button>
+            </div>
+            <ul id="diaries"></ul>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const diaries = JSON.parse(localStorage.getItem('diaries')) || [];
+        
+            const diaryList = document.getElementById('diaries');
+            const diaryForm = document.getElementById('add-diary-form');
+            const categoryInput = document.getElementById('diary-category');
+            const descriptionInput = document.getElementById('diary-description');
+            const filterCategory = document.getElementById('filter-category');
+            const applyFiltersButton = document.getElementById('apply-filters');
+            const navLinks = document.querySelectorAll('nav a');
+        
+            navLinks.forEach(link => {
+                if (link.href === window.location.href) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        
+            const savediaries = () => localStorage.setItem('diaries', JSON.stringify(diaries));
+        
+            const renderdiaries = (filtereddiaries = diaries) => {
+                diaryList.innerHTML = '';
+                filtereddiaries.forEach((diary, index) => {
+                    const diaryItem = document.createElement('li');
+                    diaryItem.setAttribute('data-category', diary.category);
+        
+                    diaryItem.innerHTML = `
+                        <div>
+                            <div><span>${diary.timestamp}</span></div>
+                            <div><strong>${diary.category}</strong></div>
+                            <div><span class="diary-description">${diary.description}</span></div>
+                            <button class="edit" data-index="${index}">Edit</button>
+                            <button class="delete" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    diaryList.appendChild(diaryItem);
+                });
+            };
+        
+            diaryForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+        
+                const newdiary = {
+                    category: categoryInput.value,
+                    description: descriptionInput.value,
+                    timestamp: new Date().toLocaleString()
+                };
+        
+                diaries.push(newdiary);
+                savediaries();
+                renderdiaries();
+                categoryInput.value = '';
+                descriptionInput.value = '';
+            });
+        
+            diaryList.addEventListener('click', (e) => {
+        
+                if (e.target.classList.contains('edit')) {
+                    const index = e.target.getAttribute('data-index');
+                    const diary = diaries[index];
+                    categoryInput.value = diary.category;
+                    descriptionInput.value = diary.description;
+                    diaries.splice(index, 1);
+                    savediaries();
+                    renderdiaries();
+                }
+        
+                if (e.target.classList.contains('delete')) {
+                    const index = e.target.getAttribute('data-index');
+                    diaries.splice(index, 1);
+                    savediaries();
+                    renderdiaries();
+                }
+            });
+        
+            applyFiltersButton.addEventListener('click', () => {
+                const category = filterCategory.value;
+                const filtereddiaries = diaries.filter(diary => {
+                    return (!category || diary.category === category);
+                });
+                renderdiaries(filtereddiaries);
+            });
+        
+            renderdiaries();
+        });
+        </script>        
+</body>
+</html>
