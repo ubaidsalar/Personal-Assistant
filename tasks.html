@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Task Manager</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="tasks.html">Tasks</a>
+            <a href="memories.html">Memories</a>
+            <a href="diary.html">Diary</a>
+        </nav>
+    </header>
+    <main>
+        <section id="task-form">
+            <h2>Add New Task</h2>
+            <form id="add-task-form">
+                <select id="task-category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Others">Others</option>
+                </select>
+                <textarea id="task-description" placeholder="Task Description"></textarea>
+                <button type="submit">Add Task</button>
+            </form>
+        </section>
+
+        <section id="task-list">
+            <h2>Task List</h2>
+            <div class="filterContainer">
+                <select id="filter-category">
+                    <option value="">All Categories</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Others">Others</option>
+                </select>
+                <button id="apply-filters">Apply Filters</button>
+            </div>
+            <ul id="tasks"></ul>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    const taskList = document.getElementById('tasks');
+    const taskForm = document.getElementById('add-task-form');
+    const categoryInput = document.getElementById('task-category');
+    const descriptionInput = document.getElementById('task-description');
+    const filterCategory = document.getElementById('filter-category');
+    const applyFiltersButton = document.getElementById('apply-filters');
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+
+    const saveTasks = () => localStorage.setItem('tasks', JSON.stringify(tasks));
+
+    const renderTasks = (filteredTasks = tasks) => {
+        taskList.innerHTML = '';
+        filteredTasks.forEach((task, index) => {
+            const taskItem = document.createElement('li');
+            taskItem.setAttribute('data-category', task.category);
+
+            taskItem.innerHTML = `
+                <div>
+                    <div><span>${task.timestamp}</span></div>
+                    <div><strong>${task.category}</strong></div>
+                    <div><span class="task-description ${task.completed ? 'completed' : ''}">${task.description}</span></div>
+                    <div><button class="complete" data-index="${index}">${task.completed ? 'Undo' : 'Complete'}</button>
+                    <button class="edit" data-index="${index}">Edit</button>
+                    <button class="delete" data-index="${index}">Delete</button></div>
+                </div>
+            `;
+            taskList.appendChild(taskItem);
+        });
+    };
+
+    taskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const now = new Date();
+        const timestamp = now.toLocaleString();
+
+        const newTask = {
+            category: categoryInput.value,
+            description: descriptionInput.value,
+            timestamp: timestamp,
+            completed: false
+        };
+
+        tasks.push(newTask);
+        saveTasks();
+        renderTasks();
+        categoryInput.value = '';
+        descriptionInput.value = '';
+    });
+
+    taskList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('complete')) {
+            const index = e.target.getAttribute('data-index');
+            tasks[index].completed = !tasks[index].completed;
+            saveTasks();
+            renderTasks();
+        }
+
+        if (e.target.classList.contains('edit')) {
+            const index = e.target.getAttribute('data-index');
+            const task = tasks[index];
+            categoryInput.value = task.category;
+            descriptionInput.value = task.description;
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+        }
+
+        if (e.target.classList.contains('delete')) {
+            const index = e.target.getAttribute('data-index');
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+        }
+    });
+
+    applyFiltersButton.addEventListener('click', () => {
+        const category = filterCategory.value;
+        const filteredTasks = tasks.filter(task => {
+            return (!category || task.category === category);
+        });
+        renderTasks(filteredTasks);
+    });
+
+    renderTasks();
+});
+
+    </script>
+</body>
+</html>
