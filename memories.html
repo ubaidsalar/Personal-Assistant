@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memories</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>My Memories</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="tasks.html">Tasks</a>
+            <a href="memories.html">Memories</a>
+            <a href="diary.html">Diary</a>
+        </nav>
+    </header>
+    <main>
+        <section id="memory-form">
+            <h2>Add New Memory</h2>
+            <form id="add-memory-form">
+                <select id="memory-category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Family">Family</option>
+                    <option value="Relationship">Relationship</option>
+                    <option value="Education & Career">Education & Career</option>
+                    <option value="Travel & Adventure">Travel & Adventure</option>
+                    <option value="Personal Growth">Personal Growth</option>
+                    <option value="Hobbies & Interests">Hobbies & Interests</option>
+                    <option value="Health & Well-being">Health & Well-being</option>
+                    <option value="Milestones & Achievements">Milestones & Achievements</option>
+                    <option value="Spirituality & Religion">Spirituality & Religion</option>
+                    <option value="Special Occasions">Special Occasions</option>
+                    <option value="Others">Others</option>
+                </select>
+                <textarea id="memory-description" placeholder="Memory Description"></textarea>
+                <button type="submit">Add Memory</button>
+            </form>
+        </section>
+
+        <section id="memory-list">
+            <h2>Memory List</h2>
+            <div class="filterContainer">
+                <select id="filter-category">
+                    <option value="">All Categories</option>
+                    <option value="Family">Family</option>
+                    <option value="Relationship">Relationship</option>
+                    <option value="Education & Career">Education & Career</option>
+                    <option value="Travel & Adventure">Travel & Adventure</option>
+                    <option value="Personal Growth">Personal Growth</option>
+                    <option value="Hobbies & Interests">Hobbies & Interests</option>
+                    <option value="Health & Well-being">Health & Well-being</option>
+                    <option value="Milestones & Achievements">Milestones & Achievements</option>
+                    <option value="Spirituality & Religion">Spirituality & Religion</option>
+                    <option value="Special Occasions">Special Occasions</option>
+                    <option value="Others">Others</option>
+                </select>
+                <button id="apply-filters">Apply Filters</button>
+            </div>
+            <ul id="memories"></ul>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const memories = JSON.parse(localStorage.getItem('memories')) || [];
+        
+            const memoryList = document.getElementById('memories');
+            const memoryForm = document.getElementById('add-memory-form');
+            const categoryInput = document.getElementById('memory-category');
+            const descriptionInput = document.getElementById('memory-description');
+            const filterCategory = document.getElementById('filter-category');
+            const applyFiltersButton = document.getElementById('apply-filters');
+            const navLinks = document.querySelectorAll('nav a');
+        
+            navLinks.forEach(link => {
+                if (link.href === window.location.href) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        
+            const saveMemories = () => localStorage.setItem('memories', JSON.stringify(memories));
+        
+            const renderMemories = (filteredMemories = memories) => {
+                memoryList.innerHTML = '';
+                filteredMemories.forEach((memory, index) => {
+                    const memoryItem = document.createElement('li');
+                    memoryItem.setAttribute('data-category', memory.category);
+        
+                    memoryItem.innerHTML = `
+                        <div>
+                            <div><span>${memory.timestamp}</span></div>
+                            <div><strong>${memory.category}</strong></div>
+                            <div><span class="memory-description">${memory.description}</span></div>
+                            <button class="edit" data-index="${index}">Edit</button>
+                            <button class="delete" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    memoryList.appendChild(memoryItem);
+                });
+            };
+        
+            memoryForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+        
+                const newMemory = {
+                    category: categoryInput.value,
+                    description: descriptionInput.value,
+                    timestamp: new Date().toLocaleString()
+                };
+        
+                memories.push(newMemory);
+                saveMemories();
+                renderMemories();
+                categoryInput.value = '';
+                descriptionInput.value = '';
+            });
+        
+            memoryList.addEventListener('click', (e) => {
+        
+                if (e.target.classList.contains('edit')) {
+                    const index = e.target.getAttribute('data-index');
+                    const memory = memories[index];
+                    categoryInput.value = memory.category;
+                    descriptionInput.value = memory.description;
+                    memories.splice(index, 1);
+                    saveMemories();
+                    renderMemories();
+                }
+        
+                if (e.target.classList.contains('delete')) {
+                    const index = e.target.getAttribute('data-index');
+                    memories.splice(index, 1);
+                    saveMemories();
+                    renderMemories();
+                }
+            });
+        
+            applyFiltersButton.addEventListener('click', () => {
+                const category = filterCategory.value;
+                const filteredMemories = memories.filter(memory => {
+                    return (!category || memory.category === category);
+                });
+                renderMemories(filteredMemories);
+            });
+        
+            renderMemories();
+        });
+        </script>        
+</body>
+</html>
