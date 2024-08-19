@@ -1,0 +1,221 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+h1 {
+    text-decoration: underline;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0 15px;
+}
+
+nav a:hover, nav a.active {
+    text-decoration: underline;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+}
+
+main {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 90vh;
+}
+
+#summary-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #cf9aff, #95c0ff);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    width: 80vw;
+}
+
+#pending-tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    width: 70vw;
+}
+
+#recent-memories {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    width: 70vw;
+}
+
+#recent-diary-entries {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    width: 70vw;
+}
+
+#task-form, #task-list, #memory-form, #memory-list, #diary-form, #diary-list {
+    background: linear-gradient(135deg, #cf9aff, #95c0ff);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding: 15px;
+    width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#add-task-form, #add-memory-form, #add-diary-form {
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
+}
+
+#task-category, #memory-category, #diary-category  {
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+#task-form input[type="text"], #task-form textarea,#memory-form input[type="text"], #memory-form textarea, #diary-form input[type="text"], #diary-form textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#task-form button, #memory-form button, #diary-form button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+#task-form button:hover, #memory-form button:hover, #diary-form button:hover {
+    background-color: #555;
+}
+
+#tasks, #memories, #diaries {
+    list-style-type: none;
+    padding: 0;
+}
+
+.filterContainer {
+    height: 5vh;
+    width: 80vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+#filter-category, #apply-filters {
+    width: 48%;
+    border-radius: 10px;
+}
+
+#apply-filters {
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+#apply-filters:hover {
+    background-color: #555;
+}
+
+#tasks li, #memories li, #diaries li {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 80vw;
+}
+
+#tasks li > div > div:nth-child(1),#memories li > div > div:nth-child(1), #diaries li > div > div:nth-child(1) {
+    font-style: italic;
+    font-size: 18px;
+} 
+
+#tasks li > div > div:nth-child(2),#memories li > div > div:nth-child(2), #diaries li > div > div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: seashell;
+    border: 1px solid gray;
+    border-radius: 20px;
+}
+
+#tasks li > div > div:nth-child(3),#memories li > div > div:nth-child(3), #diaries li > div > div:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tasks li button, #memories li button, #diaries li button {
+    margin-right: 5vw;
+    margin-left: 5vw;
+    padding: 8px 10px;
+    width: 15vw;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#tasks li button.edit, #memories li button.edit, #diaries li button.edit {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#tasks li button.delete, #memories li button.delete, #diaries li button.delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+#tasks li button.complete {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+#tasks li button:hover, #memories li button:hover, #diaries li button:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+    transition: transform 0.2s, opacity 0.2s;
+}
