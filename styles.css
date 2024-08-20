@@ -28,7 +28,7 @@ nav a:hover, nav a.active {
     background-color: white;
     text-decoration: none;
     color: black;
-    border: 2px groove seashell;
+    border: 2px groove gray;
     border-radius: 20px;
 }
 
