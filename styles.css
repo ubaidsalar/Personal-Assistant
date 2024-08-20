@@ -187,11 +187,15 @@ main {
     margin-bottom: 10px;
 }
 
+#tasks li > div > div:nth-child(4),#memories li > div > div:nth-child(4), #diaries li > div > div:nth-child(4) {
+     display: flex;
+     flex-direction: row;
+     justify-content: space-evenly;
+}
+
 #tasks li button, #memories li button, #diaries li button {
-    margin-right: 5vw;
-    margin-left: 5vw;
     padding: 8px 10px;
-    width: 15vw;
+    width: 20vw;
     border: none;
     border-radius: 5px;
     cursor: pointer;
